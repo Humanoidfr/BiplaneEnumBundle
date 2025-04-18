@@ -6,7 +6,7 @@ class JsonSerializationTest extends BaseSerializationTest
 {
     protected function getContent($key)
     {
-        static $outputs = array();
+        static $outputs = [];
 
         if (!$outputs) {
             $outputs['enum'] = '2';

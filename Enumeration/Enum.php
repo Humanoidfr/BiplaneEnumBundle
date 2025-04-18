@@ -23,10 +23,7 @@ abstract class Enum implements EnumInterface
         $this->value = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function create($value)
+    public static function create($value): EnumInterface
     {
         if (!static::isAcceptableValue($value)) {
             throw new InvalidEnumArgumentException($value);
@@ -35,18 +32,12 @@ abstract class Enum implements EnumInterface
         return new static($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getReadable()
+    public function getReadable(): string
     {
         return static::getReadableFor($this->getValue());
     }
@@ -58,21 +49,15 @@ abstract class Enum implements EnumInterface
      */
     public function __toString()
     {
-        return (string)$this->getReadable();
+        return (string) $this->getReadable();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function isAcceptableValue($value)
+    public static function isAcceptableValue($value): bool
     {
         return in_array($value, static::getPossibleValues(), true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getReadableFor($value)
+    public static function getReadableFor($value): string
     {
         if (!static::isAcceptableValue($value)) {
             throw new InvalidEnumArgumentException($value);
@@ -83,10 +68,7 @@ abstract class Enum implements EnumInterface
         return $humanRepresentations[$value];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function equals(EnumInterface $enum)
+    public function equals(EnumInterface $enum): bool
     {
         return get_class($this) === get_class($enum) && $this->value === $enum->getValue();
     }

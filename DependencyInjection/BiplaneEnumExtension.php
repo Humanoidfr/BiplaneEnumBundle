@@ -8,35 +8,35 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
- * BiplaneEnumExtension
+ * BiplaneEnumExtension.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */
 class BiplaneEnumExtension extends ConfigurableExtension
 {
     /**
-     * {@inheritdoc}
+     * @throws \Exception
      */
-    protected function loadInternal(array $config, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        if (count($config['serializer']['types']) > 0) {
+        if (count($mergedConfig['serializer']['types']) > 0) {
             $definition = $container->getDefinition('biplane_enum.jms_serializer.enum_handler');
-            $methods = array(
+            $methods = [
                 'json' => 'serializeEnumToJson',
-                'xml'  => 'serializeEnumToXml',
-            );
+                'xml' => 'serializeEnumToXml',
+            ];
 
-            foreach ($config['serializer']['types'] as $type) {
+            foreach ($mergedConfig['serializer']['types'] as $type) {
                 foreach ($methods as $format => $method) {
-                    $definition->addTag('jms_serializer.handler', array(
+                    $definition->addTag('jms_serializer.handler', [
                         'direction' => 'serialization',
-                        'type'      => $type,
-                        'format'    => $format,
-                        'method'    => $method,
-                    ));
+                        'type' => $type,
+                        'format' => $format,
+                        'method' => $method,
+                    ]);
                 }
             }
         } else {

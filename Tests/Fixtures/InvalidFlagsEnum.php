@@ -9,21 +9,21 @@ use Biplane\EnumBundle\Enumeration\FlaggedEnum as BaseFlagEnum;
  */
 class InvalidFlagsEnum extends BaseFlagEnum
 {
-    const FIRST   = 1;
-    const SECOND  = 2;
-    const INVALID = 3;
+    public const FIRST = 1;
+    public const SECOND = 2;
+    public const INVALID = 3;
 
-    public static function getReadables()
+    public static function getReadables(): array
     {
-        return array(
-            self::FIRST   => 'First',
-            self::SECOND  => 'Second',
-            self::INVALID => 'Invalid'
-        );
+        return [
+            self::FIRST => 'First',
+            self::SECOND => 'Second',
+            self::INVALID => 'Invalid',
+        ];
     }
 
-    public static function getPossibleValues()
+    public static function getPossibleValues(): array
     {
-        return array(self::FIRST, self::SECOND, self::INVALID);
+        return [self::FIRST, self::SECOND, self::INVALID];
     }
 }

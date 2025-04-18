@@ -11,41 +11,32 @@ use Biplane\EnumBundle\Exception\InvalidEnumArgumentException;
  */
 abstract class FlaggedEnum extends Enum
 {
-    const NONE = 0;
+    public const NONE = 0;
 
-    private static $masks = array();
+    private static array $masks = [];
 
-    protected $flags;
+    protected array $flags;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function isAcceptableValue($value)
+    public static function isAcceptableValue($value): bool
     {
         if (!is_int($value)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Expected argument of type "integer", "%s" given.',
-                is_object($value) ? get_class($value) : gettype($value)
-            ));
+            throw new \InvalidArgumentException(sprintf('Expected argument of type "integer", "%s" given.', is_object($value) ? get_class($value) : gettype($value)));
         }
 
-        if ($value === self::NONE) {
+        if (self::NONE === $value) {
             return true;
         }
 
         return $value === ($value & static::getBitmask());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getReadableFor($value, $separator = '; ')
+    public static function getReadableFor($value, $separator = '; '): string
     {
         if (!static::isAcceptableValue($value)) {
             throw new InvalidEnumArgumentException($value);
         }
 
-        if ($value === self::NONE) {
+        if (self::NONE === $value) {
             return static::getReadableForNone();
         }
 
@@ -55,7 +46,7 @@ abstract class FlaggedEnum extends Enum
             return $humanRepresentations[$value];
         }
 
-        $parts = array();
+        $parts = [];
 
         foreach ($humanRepresentations as $flag => $readableValue) {
             if ($flag === ($flag & $value)) {
@@ -71,7 +62,7 @@ abstract class FlaggedEnum extends Enum
      *
      * @return string
      */
-    protected static function getReadableForNone()
+    protected static function getReadableForNone(): string
     {
         return 'None';
     }
@@ -83,7 +74,7 @@ abstract class FlaggedEnum extends Enum
      *
      * @throws \UnexpectedValueException
      */
-    protected static function getBitmask()
+    protected static function getBitmask(): int
     {
         $enumType = get_called_class();
 
@@ -92,9 +83,7 @@ abstract class FlaggedEnum extends Enum
 
             foreach (static::getPossibleValues() as $flag) {
                 if ($flag < 1 || ($flag > 1 && ($flag % 2) !== 0)) {
-                    throw new \UnexpectedValueException(sprintf(
-                        'Possible value (%d) of the enumeration is not the bit flag.', $flag
-                    ));
+                    throw new \UnexpectedValueException(sprintf('Possible value (%d) of the enumeration is not the bit flag.', $flag));
                 }
 
                 $mask |= $flag;
@@ -115,16 +104,13 @@ abstract class FlaggedEnum extends Enum
      *
      * @deprecated
      */
-    protected static function getMaskOfPossibleValues()
+    protected static function getMaskOfPossibleValues(): int
     {
         $mask = 0;
 
         foreach (static::getPossibleValues() as $flag) {
             if ($flag > 1 && ($flag % 2) !== 0) {
-                throw new \UnexpectedValueException(sprintf(
-                    'Possible value (%d) of the enumeration is not the bit flag.',
-                    $flag
-                ));
+                throw new \UnexpectedValueException(sprintf('Possible value (%d) of the enumeration is not the bit flag.', $flag));
             }
 
             $mask |= $flag;
@@ -133,10 +119,7 @@ abstract class FlaggedEnum extends Enum
         return $mask;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getReadable($separator = '; ')
+    public function getReadable($separator = '; '): string
     {
         return static::getReadableFor($this->getValue(), $separator);
     }
@@ -146,10 +129,10 @@ abstract class FlaggedEnum extends Enum
      *
      * @return array
      */
-    public function getFlags()
+    public function getFlags(): array
     {
-        if ($this->flags === null) {
-            $this->flags = array();
+        if (null === $this->flags) {
+            $this->flags = [];
 
             foreach (static::getPossibleValues() as $flag) {
                 if ($this->hasFlag($flag)) {
@@ -164,11 +147,11 @@ abstract class FlaggedEnum extends Enum
     /**
      * Determines whether the specified flag is set in a numeric value.
      *
-     * @param int $bitFlag The bit flag or bit flags.
+     * @param int $bitFlag the bit flag or bit flags
      *
      * @return bool True if the bit flag or bit flags are also set in the current instance; otherwise, false
      */
-    public function hasFlag($bitFlag)
+    public function hasFlag(int $bitFlag): bool
     {
         if ($bitFlag >= 1) {
             return $bitFlag === ($bitFlag & $this->value);
@@ -184,11 +167,11 @@ abstract class FlaggedEnum extends Enum
      *
      * @param int $flags The bit flag or bit flags
      *
-     * @return FlaggedEnum A new instance of the enumeration
+     * @return EnumInterface A new instance of the enumeration
      *
      * @throws InvalidEnumArgumentException When $flags is not acceptable for this enumeration type
      */
-    public function addFlags($flags)
+    public function addFlags(int $flags): EnumInterface
     {
         if (!static::isAcceptableValue($flags)) {
             throw new InvalidEnumArgumentException($flags);
@@ -204,11 +187,11 @@ abstract class FlaggedEnum extends Enum
      *
      * @param int $flags The bit flag or bit flags
      *
-     * @return FlaggedEnum A new instance of the enumeration
+     * @return EnumInterface A new instance of the enumeration
      *
      * @throws InvalidEnumArgumentException When $flags is not acceptable for this enumeration type
      */
-    public function removeFlags($flags)
+    public function removeFlags(int $flags): EnumInterface
     {
         if (!static::isAcceptableValue($flags)) {
             throw new InvalidEnumArgumentException($flags);

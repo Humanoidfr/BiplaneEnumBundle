@@ -5,9 +5,7 @@ namespace Biplane\EnumBundle\Tests\Enumeration;
 use Biplane\EnumBundle\Exception\InvalidEnumArgumentException;
 use Biplane\EnumBundle\Tests\Fixtures\FlagsEnum;
 use Biplane\EnumBundle\Tests\Fixtures\InvalidFlagsEnum;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use UnexpectedValueException;
 
 /**
  * @author Denis Vasilev <yethee@biplane.ru>
@@ -16,7 +14,7 @@ class FlaggedEnumTest extends TestCase
 {
     public function testThrowExceptionWhenValueIsNotInteger(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         FlagsEnum::isAcceptableValue('1');
     }
@@ -26,14 +24,16 @@ class FlaggedEnumTest extends TestCase
      */
     public function testAcceptableValue($value, $result): void
     {
-        self::assertSame($result, FlagsEnum::isAcceptableValue($value),
+        self::assertSame(
+            $result,
+            FlagsEnum::isAcceptableValue($value),
             sprintf('->isAcceptableValue() returns %s if the value %d.', $result ? 'true' : 'false', $value)
         );
     }
 
     public function testThrowExceptionWhenBitmaskIsInvalid(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(\UnexpectedValueException::class);
 
         InvalidFlagsEnum::create(InvalidFlagsEnum::FIRST);
     }
@@ -44,7 +44,7 @@ class FlaggedEnumTest extends TestCase
             FlagsEnum::NONE | FlagsEnum::FIRST | FlagsEnum::THIRD
         );
 
-        self::assertEquals(array(FlagsEnum::FIRST, FlagsEnum::THIRD), $value->getFlags());
+        self::assertEquals([FlagsEnum::FIRST, FlagsEnum::THIRD], $value->getFlags());
     }
 
     public function testSingleFlagCanBeReadabled(): void
@@ -130,14 +130,14 @@ class FlaggedEnumTest extends TestCase
 
     public function valuesProvider(): array
     {
-        return array(
-            array(0, true),
-            array(FlagsEnum::FIRST, true),
-            array(3, true),
-            array(8, false),
-            array(10, false),
-            array(23, true),
-            array(55, false)
-        );
+        return [
+            [0, true],
+            [FlagsEnum::FIRST, true],
+            [3, true],
+            [8, false],
+            [10, false],
+            [23, true],
+            [55, false],
+        ];
     }
 }

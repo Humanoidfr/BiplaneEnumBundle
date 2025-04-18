@@ -7,7 +7,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
 
 /**
- * EnumHandler
+ * EnumHandler.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */
@@ -19,8 +19,6 @@ class EnumHandler
      * @param JsonSerializationVisitor $visitor The visitor
      * @param EnumInterface            $data    A EnumInterface instance
      * @param array                    $type    The type parameters
-     *
-     * @return mixed
      */
     public function serializeEnumToJson(JsonSerializationVisitor $visitor, EnumInterface $data, array $type)
     {
@@ -36,13 +34,13 @@ class EnumHandler
      *
      * @return \DOMCdataSection
      */
-    public function serializeEnumToXml(XmlSerializationVisitor $visitor, EnumInterface $data, array $type)
+    public function serializeEnumToXml(XmlSerializationVisitor $visitor, EnumInterface $data, array $type): \DOMCdataSection
     {
         $valueNode = $visitor->getDocument()->createCDATASection($data->getValue());
 
         $currentNode = $visitor->getCurrentNode();
 
-        if ($currentNode !== null) {
+        if (null !== $currentNode) {
             $currentNode->appendChild($valueNode);
         } else {
             $visitor->setCurrentNode($valueNode);

@@ -3,7 +3,7 @@
 namespace Biplane\EnumBundle\Exception;
 
 /**
- * InvalidEnumArgumentException
+ * InvalidEnumArgumentException.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */

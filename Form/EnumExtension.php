@@ -5,16 +5,16 @@ namespace Biplane\EnumBundle\Form;
 use Symfony\Component\Form\AbstractExtension;
 
 /**
- * EnumExtension
+ * EnumExtension.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */
 class EnumExtension extends AbstractExtension
 {
-    protected function loadTypes()
+    protected function loadTypes(): array
     {
-        return array(
+        return [
             new Type\EnumType(),
-        );
+        ];
     }
 }

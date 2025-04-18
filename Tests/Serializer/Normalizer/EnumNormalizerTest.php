@@ -6,12 +6,16 @@ use Biplane\EnumBundle\Enumeration\EnumInterface;
 use Biplane\EnumBundle\Serializer\Normalizer\EnumNormalizer;
 use Biplane\EnumBundle\Tests\Fixtures\SimpleEnum;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 /**
  * @author Denis Vasilev <yethee@biplane.ru>
  */
 class EnumNormalizerTest extends TestCase
 {
+    /**
+     * @throws ExceptionInterface
+     */
     public function testNormalize(): void
     {
         $normalizer = new EnumNormalizer();
@@ -20,7 +24,10 @@ class EnumNormalizerTest extends TestCase
         self::assertSame($value->getValue(), $normalizer->normalize($value));
     }
 
-    public function testDenormalize():  void
+    /**
+     * @throws ExceptionInterface
+     */
+    public function testDenormalize(): void
     {
         $normalizer = new EnumNormalizer();
 
@@ -38,6 +45,9 @@ class EnumNormalizerTest extends TestCase
         self::assertFalse($normalizer->supportsNormalization(null));
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testSupportsDenormalization(): void
     {
         $normalizer = new EnumNormalizer();

@@ -2,6 +2,7 @@
 
 namespace Biplane\EnumBundle\Form\DataTransformer;
 
+use Biplane\EnumBundle\Enumeration\EnumInterface;
 use Biplane\EnumBundle\Enumeration\FlaggedEnum;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -22,9 +23,9 @@ class FlaggedEnumToValuesTransformer extends BaseEnumTransformer
      *
      * @throws UnexpectedTypeException When $value is not the flagged enumeration
      */
-    public function transform($value)
+    public function transform($value): ?array
     {
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
@@ -38,32 +39,28 @@ class FlaggedEnumToValuesTransformer extends BaseEnumTransformer
     /**
      * Transforms an array of raw values to the flagged enumeration object.
      *
-     * @param array $values An array of raw values
+     * @param array $value An array of raw values
      *
-     * @return FlaggedEnum|null A FlaggedEnum instance or null
+     * @return EnumInterface A FlaggedEnum instance or null
      *
      * @throws UnexpectedTypeException       When $values is not array
      * @throws TransformationFailedException When any value is not the integer type
      */
-    public function reverseTransform($values)
+    public function reverseTransform($value): EnumInterface
     {
-        if (!is_array($values)) {
-            throw new UnexpectedTypeException($values, 'array');
+        if (!is_array($value)) {
+            throw new UnexpectedTypeException($value, 'array');
         }
 
-        if (count($values) == 0) {
+        if (0 == count($value)) {
             return $this->createEnum(FlaggedEnum::NONE);
         }
 
         $rawValue = 0;
 
-        foreach ($values as $value) {
-            if (!is_integer($value)) {
-                throw new TransformationFailedException(sprintf(
-                    'The value "%s" (type of %s) must be the integer type.',
-                    $value,
-                    gettype($value)
-                ));
+        foreach ($value as $val) {
+            if (!is_integer($val)) {
+                throw new TransformationFailedException(sprintf('The value "%s" (type of %s) must be the integer type.', $val, gettype($val)));
             }
 
             $rawValue |= $value;

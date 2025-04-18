@@ -6,21 +6,21 @@ use Biplane\EnumBundle\Enumeration\Enum;
 
 class SimpleEnum extends Enum
 {
-    const ZERO   = 0;
-    const FIRST  = 1;
-    const SECOND = 2;
+    public const ZERO = 0;
+    public const FIRST = 1;
+    public const SECOND = 2;
 
-    public static function getReadables()
+    public static function getReadables(): array
     {
-        return array(
+        return [
             self::ZERO => 'Zero',
             self::FIRST => 'First',
-            self::SECOND => 'Second'
-        );
+            self::SECOND => 'Second',
+        ];
     }
 
-    public static function getPossibleValues()
+    public static function getPossibleValues(): array
     {
-        return array(self::ZERO, self::FIRST, self::SECOND);
+        return [self::ZERO, self::FIRST, self::SECOND];
     }
 }

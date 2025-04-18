@@ -9,24 +9,24 @@ use Biplane\EnumBundle\Enumeration\FlaggedEnum;
  */
 class FlagsEnum extends FlaggedEnum
 {
-    const FIRST  = 1;
-    const SECOND = 2;
-    const THIRD  = 4;
-    const FOURTH = 16;
-    const ALL    = 23;
+    public const FIRST = 1;
+    public const SECOND = 2;
+    public const THIRD = 4;
+    public const FOURTH = 16;
+    public const ALL = 23;
 
-    public static function getReadables()
+    public static function getReadables(): array
     {
-        return array(
-            self::FIRST  => 'First',
+        return [
+            self::FIRST => 'First',
             self::SECOND => 'Second',
-            self::THIRD  => 'Third',
+            self::THIRD => 'Third',
             self::FOURTH => 'Fourth',
-        );
+        ];
     }
 
-    public static function getPossibleValues()
+    public static function getPossibleValues(): array
     {
-        return array(self::FIRST, self::SECOND, self::THIRD, self::FOURTH);
+        return [self::FIRST, self::SECOND, self::THIRD, self::FOURTH];
     }
 }

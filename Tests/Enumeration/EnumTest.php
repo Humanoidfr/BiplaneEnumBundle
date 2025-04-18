@@ -2,10 +2,9 @@
 
 namespace Biplane\EnumBundle\Tests\Enumeration;
 
-use Biplane\EnumBundle\Enumeration\Enum;
 use Biplane\EnumBundle\Exception\InvalidEnumArgumentException;
-use Biplane\EnumBundle\Tests\Fixtures\SimpleEnum;
 use Biplane\EnumBundle\Tests\Fixtures\ExtendedSimpleEnum;
+use Biplane\EnumBundle\Tests\Fixtures\SimpleEnum;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +27,7 @@ class EnumTest extends TestCase
     {
         $enumValue = SimpleEnum::create(SimpleEnum::FIRST);
 
-        self::assertEquals('First', (string)$enumValue);
+        self::assertEquals('First', (string) $enumValue);
     }
 
     public function testExceptionIsRaisedWhenValueIsNotAcceptable(): void
@@ -74,9 +73,9 @@ class EnumTest extends TestCase
 
     public function enumValuesProvider(): array
     {
-        return array(
-            array(1, 'First'),
-            array(SimpleEnum::SECOND, 'Second')
-        );
+        return [
+            [1, 'First'],
+            [SimpleEnum::SECOND, 'Second'],
+        ];
     }
 }

@@ -24,24 +24,20 @@ class EnumToValueTransformer extends BaseEnumTransformer
      * @throws UnexpectedTypeException       When $value is not valid type
      * @throws TransformationFailedException When $value is not acceptable for enumeration
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): ?EnumInterface
     {
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
-        if (null !== $value && !is_scalar($value)) {
+        if (!is_scalar($value)) {
             throw new UnexpectedTypeException($value, 'scalar');
         }
 
         try {
             return $this->createEnum($value);
         } catch (InvalidEnumArgumentException $ex) {
-            throw new TransformationFailedException(sprintf(
-                'The value "%s" is not acceptable for enumeration of %s type.',
-                $value,
-                $this->enumClass
-            ));
+            throw new TransformationFailedException(sprintf('The value "%s" is not acceptable for enumeration of %s type.', $value, $this->enumClass));
         }
     }
 
@@ -50,13 +46,13 @@ class EnumToValueTransformer extends BaseEnumTransformer
      *
      * @param EnumInterface|null $value An EnumInterface instance
      *
-     * @return mixed A scalar value
+     * @return string|null A scalar value
      *
      * @throws UnexpectedTypeException When $value is not valid type
      */
-    public function transform($value)
+    public function transform($value): ?string
     {
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
@@ -64,6 +60,6 @@ class EnumToValueTransformer extends BaseEnumTransformer
             throw new UnexpectedTypeException($value, $this->enumClass);
         }
 
-        return (string)$value->getValue();
+        return (string) $value->getValue();
     }
 }

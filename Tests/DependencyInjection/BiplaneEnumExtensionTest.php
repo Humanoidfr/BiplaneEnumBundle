@@ -13,35 +13,32 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class BiplaneEnumExtensionTest extends TestCase
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $container;
+    private ContainerBuilder $container;
 
     /**
      * @var BiplaneEnumExtension
      */
-    private $extension;
+    private BiplaneEnumExtension $extension;
 
     public function testLoadWithDefaults(): void
     {
-        $this->extension->load(array(), $this->container);
+        $this->extension->load([], $this->container);
 
         self::assertFalse($this->container->hasDefinition('biplane_enum.jms_serializer.enum_handler'));
     }
 
     public function testLoadSerializationTypes(): void
     {
-        $config = array(
-            'serializer' => array(
-                'types' => array(
+        $config = [
+            'serializer' => [
+                'types' => [
                     SimpleEnum::class,
                     FlagsEnum::class,
-                )
-            )
-        );
+                ],
+            ],
+        ];
 
-        $this->extension->load(array('biplane_enum' => $config), $this->container);
+        $this->extension->load(['biplane_enum' => $config], $this->container);
 
         self::assertTrue($this->container->hasDefinition('biplane_enum.jms_serializer.enum_handler'));
 
@@ -68,12 +65,12 @@ class BiplaneEnumExtensionTest extends TestCase
 
     private static function assertTagAttributes(array $attributes, $type, $format): void
     {
-        $expected = array(
+        $expected = [
             'direction' => 'serialization',
-            'type'      => $type,
-            'format'    => $format,
-            'method'    => 'serializeEnumTo' . ucfirst($format),
-        );
+            'type' => $type,
+            'format' => $format,
+            'method' => 'serializeEnumTo' . ucfirst($format),
+        ];
 
         self::assertEquals($expected, $attributes);
     }

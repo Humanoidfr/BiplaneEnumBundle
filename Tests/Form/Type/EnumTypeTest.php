@@ -28,9 +28,9 @@ class EnumTypeTest extends FormIntegrationTestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Enum class "Biplane\EnumBundle\Tests\Form\Type\EnumTypeTest" must be implements of Biplane\EnumBundle\Enumeration\EnumInterface');
 
-        $this->factory->create($this->getType(), null, array(
-            'enum_class' => __CLASS__
-        ));
+        $this->factory->create($this->getType(), null, [
+            'enum_class' => __CLASS__,
+        ]);
     }
 
     public function testThrowExceptionWhenSpecifiedEnumClassDoesNotExists(): void
@@ -38,17 +38,17 @@ class EnumTypeTest extends FormIntegrationTestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The "enum_class" (InvalidClass) does not exist.');
 
-        $this->factory->create($this->getType(), null, array(
-            'enum_class' => 'InvalidClass'
-        ));
+        $this->factory->create($this->getType(), null, [
+            'enum_class' => 'InvalidClass',
+        ]);
     }
 
     public function testThrowExceptionWhenAppDataNotArrayForMultipleChoices(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $this->expectException(UnexpectedTypeException::class);
 
@@ -57,24 +57,24 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testThrowExcetionWhenAppDataIsInvalidForMultipleChoices(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $this->expectException(TransformationFailedException::class);
 
-        $field->setData(array(
+        $field->setData([
             SimpleEnum::create(1),
-            2
-        ));
+            2,
+        ]);
     }
 
     public function testThrowExcetionWhenAppDataIsInvalidForSingleChoice(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $this->expectException(UnexpectedTypeException::class);
 
@@ -83,9 +83,9 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testBindSingleNull(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->submit(null);
 
@@ -96,9 +96,9 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testBindSingle(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->submit('1');
 
@@ -109,66 +109,66 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testBindMultipleNull(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->submit(null);
 
-        self::assertEquals(array(), $field->getData());
-        self::assertEquals(array(), $field->getViewData());
+        self::assertEquals([], $field->getData());
+        self::assertEquals([], $field->getViewData());
     }
 
-    public function testBindMultipleNull_FlagEnum(): void
+    public function testBindMultipleNullFlagEnum(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'enum_class' => FlagsEnum::class,
-        ));
+        ]);
 
         $field->submit(null);
 
         self::assertInstanceOf(FlagsEnum::class, $field->getData());
         self::assertEquals(FlaggedEnum::NONE, $field->getData()->getValue());
-        self::assertEquals(array(), $field->getNormData());
-        self::assertEquals(array(), $field->getViewData());
+        self::assertEquals([], $field->getNormData());
+        self::assertEquals([], $field->getViewData());
     }
 
     public function testBindMultipleExpanded(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'expanded' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
-        $field->submit(array('1' => '1'));
+        $field->submit(['1' => '1']);
 
-        $data = array(SimpleEnum::create(1));
+        $data = [SimpleEnum::create(1)];
 
         self::assertTrue($field->isSynchronized());
         self::assertEquals($data, $field->getData());
-        self::assertEquals(array(1), $field->getNormData());
+        self::assertEquals([1], $field->getNormData());
         self::assertTrue($field['1']->getData());
         self::assertFalse($field['2']->getData());
         self::assertSame('1', $field['1']->getViewData());
         self::assertNull($field['2']->getViewData());
     }
 
-    public function testBindMultipleExpanded_FlagEnum(): void
+    public function testBindMultipleExpandedFlagEnum(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'expanded' => true,
             'enum_class' => FlagsEnum::class,
-        ));
+        ]);
 
-        $field->submit(array('0' => '1', '1' => '2'));
+        $field->submit(['0' => '1', '1' => '2']);
 
         self::assertTrue($field->isSynchronized());
         self::assertEquals(FlagsEnum::create(1 | 2), $field->getData());
-        self::assertEquals(array(1, 2), $field->getNormData());
+        self::assertEquals([1, 2], $field->getNormData());
         self::assertTrue($field['0']->getData());
         self::assertTrue($field['1']->getData());
         self::assertFalse($field['2']->getData());
@@ -181,9 +181,9 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testSetDataSingleNull(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData(null);
 
@@ -193,16 +193,16 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testSetDataMultipleExpandedNull(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'expanded' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData(null);
 
         self::assertNull($field->getData());
-        self::assertEquals(array(), $field->getViewData());
+        self::assertEquals([], $field->getViewData());
 
         foreach ($field->all() as $child) {
             self::assertSubForm($child, false, null);
@@ -211,24 +211,24 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testSetDataMultipleNonExpandedNull(): void
     {
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'expanded' => false,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData(null);
 
         self::assertNull($field->getData());
-        self::assertEquals(array(), $field->getViewData());
+        self::assertEquals([], $field->getViewData());
     }
 
     public function testSetDataSingle(): void
     {
         $data = SimpleEnum::create(1);
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData($data);
 
@@ -238,23 +238,23 @@ class EnumTypeTest extends FormIntegrationTestCase
 
     public function testSetDataMultipleExpanded(): void
     {
-        $data = array(
+        $data = [
             SimpleEnum::create(SimpleEnum::FIRST),
             SimpleEnum::create(SimpleEnum::ZERO),
-        );
-        $field = $this->factory->create($this->getType(), null, array(
+        ];
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => true,
             'expanded' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData($data);
 
         self::assertEquals($data, $field->getData());
-        self::assertSame(array(
+        self::assertSame([
             0 => '1',
-            1 => '0'
-        ), $field->getViewData());
+            1 => '0',
+        ], $field->getViewData());
 
         self::assertSubForm($field->get('0'), true, '0');
         self::assertSubForm($field->get('1'), true, '1');
@@ -264,11 +264,11 @@ class EnumTypeTest extends FormIntegrationTestCase
     public function testSetDataExpanded(): void
     {
         $data = SimpleEnum::create(1);
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'multiple' => false,
             'expanded' => true,
             'enum_class' => SimpleEnum::class,
-        ));
+        ]);
 
         $field->setData($data);
 
@@ -281,19 +281,19 @@ class EnumTypeTest extends FormIntegrationTestCase
         self::assertSubForm($field->get('2'), false, null);
     }
 
-    public function testSetDataMultipleExpanded_FlagEnum(): void
+    public function testSetDataMultipleExpandedFlagEnum(): void
     {
         $data = FlagsEnum::create(1 | 4);
-        $field = $this->factory->create($this->getType(), null, array(
+        $field = $this->factory->create($this->getType(), null, [
             'expanded' => true,
             'enum_class' => FlagsEnum::class,
-        ));
+        ]);
 
         $field->setData($data);
 
         self::assertEquals($data, $field->getData());
-        self::assertEquals(array(1, 4), $field->getNormData());
-        self::assertEquals(array(0 => 1, 1 => 4), $field->getViewData());
+        self::assertEquals([1, 4], $field->getNormData());
+        self::assertEquals([0 => 1, 1 => 4], $field->getViewData());
 
         self::assertSubForm($field->get('0'), true, '1');
         self::assertSubForm($field->get('1'), false, null);
@@ -301,11 +301,11 @@ class EnumTypeTest extends FormIntegrationTestCase
         self::assertSubForm($field->get('3'), false, null);
     }
 
-    protected function getExtensions()
+    protected function getExtensions(): array
     {
-        return array_merge(parent::getExtensions(), array(
+        return array_merge(parent::getExtensions(), [
             new EnumExtension(),
-        ));
+        ]);
     }
 
     private function getType(): string

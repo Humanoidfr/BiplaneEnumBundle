@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 
 /**
- * EnumNormalizer
+ * EnumNormalizer.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */
@@ -16,39 +16,30 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     use SerializerAwareTrait;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, $format = null, array $context = [])
     {
         return $object->getValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function denormalize($data, $class, $format = null, array $context = array())
+    public function denormalize($data, $type, $format = null, array $context = [])
     {
-        return call_user_func(array($class, 'create'), $data);
+        return call_user_func([$type, 'create'], $data);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof EnumInterface;
     }
 
     /**
-     * {@inheritDoc}
+     * @throws \ReflectionException
      */
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization($data, $type, $format = null): bool
     {
         $reflection = new \ReflectionClass($type);
 
         if ($reflection->isSubclassOf(EnumInterface::class)) {
-            if (call_user_func(array($type, 'isAcceptableValue'), $data)) {
+            if (call_user_func([$type, 'isAcceptableValue'], $data)) {
                 return true;
             }
         }

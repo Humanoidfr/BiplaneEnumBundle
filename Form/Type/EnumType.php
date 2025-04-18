@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * EnumType
+ * EnumType.
  *
  * @author Denis Vasilev <yethee@biplane.ru>
  */
@@ -45,12 +45,7 @@ class EnumType extends AbstractType
         } catch (\InvalidArgumentException $ex) {
             throw new InvalidConfigurationException($ex->getMessage());
         } catch (\ReflectionException $ex) {
-            throw new InvalidConfigurationException(
-                sprintf(
-                    'The "enum_class" (%s) does not exist.',
-                    $options['enum_class']
-                )
-            );
+            throw new InvalidConfigurationException(sprintf('The "enum_class" (%s) does not exist.', $options['enum_class']));
         }
 
         if ($options['expanded'] && !$options['multiple']) {
@@ -70,11 +65,11 @@ class EnumType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $choices = function (Options $options) {
-            if ($options['enum_class'] !== null && method_exists($options['enum_class'], 'getReadables')) {
+            if (null !== $options['enum_class'] && method_exists($options['enum_class'], 'getReadables')) {
                 return array_flip($options['enum_class']::getReadables());
             }
 
-            return array();
+            return [];
         };
 
         $enumClass = function (Options $options) {
@@ -95,30 +90,30 @@ class EnumType extends AbstractType
 
         $resolver
             ->setDefaults(
-                array(
+                [
                     'enum_class' => $enumClass,
                     'choices' => $choices,
                     'choice_value' => function ($choice) {
                         return $choice;
                     },
                     'multiple' => $multiple,
-                )
+                ]
             )
-            ->setAllowedTypes('enum_class', array('string'))
-            ->setAllowedTypes('choices', array('array'));
+            ->setAllowedTypes('enum_class', ['string'])
+            ->setAllowedTypes('choices', ['array']);
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'biplane_enum';
     }
 
-    private function isFlaggedEnum($enumClass)
+    private function isFlaggedEnum($enumClass): bool
     {
         return is_subclass_of($enumClass, FlaggedEnum::class);
     }

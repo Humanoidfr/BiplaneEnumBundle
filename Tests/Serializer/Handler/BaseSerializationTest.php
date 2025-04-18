@@ -5,6 +5,7 @@ namespace Biplane\EnumBundle\Tests\Serializer\Handler;
 use Biplane\EnumBundle\Serializer\Handler\EnumHandler;
 use Biplane\EnumBundle\Tests\Fixtures\SimpleEnum;
 use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
@@ -12,15 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 abstract class BaseSerializationTest extends TestCase
 {
-    /**
-     * @var HandlerRegistry
-     */
-    protected $handlerRegistry;
+    protected HandlerRegistry $handlerRegistry;
 
-    /**
-     * @var EnumHandler
-     */
-    protected $handler;
+    protected EnumHandler $handler;
 
     public function testEnum(): void
     {
@@ -35,15 +30,16 @@ abstract class BaseSerializationTest extends TestCase
     {
         $this->registerHandler(SimpleEnum::class);
 
-        $data = array(
+        $data = [
             SimpleEnum::create(SimpleEnum::FIRST),
-            SimpleEnum::create(SimpleEnum::SECOND)
-        );
+            SimpleEnum::create(SimpleEnum::SECOND),
+        ];
 
         self::assertEquals($this->getContent('array_enums'), $this->serialize($data));
     }
 
     abstract protected function getContent($key);
+
     abstract protected function getFormat(): string;
 
     protected function setUp(): void
@@ -64,14 +60,14 @@ abstract class BaseSerializationTest extends TestCase
     protected function registerHandler($type): void
     {
         $this->handlerRegistry->registerHandler(
-            GraphNavigator::DIRECTION_SERIALIZATION,
+            GraphNavigatorInterface::DIRECTION_SERIALIZATION,
             $type,
             $this->getFormat(),
-            array($this->handler, 'serializeEnumTo' . ucfirst($this->getFormat()))
+            [$this->handler, 'serializeEnumTo' . ucfirst($this->getFormat())]
         );
     }
 
-    protected function serialize($data)
+    protected function serialize($data): string
     {
         return $this->getSerializer()->serialize($data, $this->getFormat());
     }

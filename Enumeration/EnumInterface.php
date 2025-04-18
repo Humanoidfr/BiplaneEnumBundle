@@ -21,30 +21,24 @@ interface EnumInterface
      *
      * @throws InvalidEnumArgumentException When $value is not acceptable for this enumeration type
      */
-    public static function create($value);
+    public static function create($value): EnumInterface;
 
     /**
      * Gets an array of the possible values.
-     *
-     * @return array
      */
-    public static function getPossibleValues();
+    public static function getPossibleValues(): array;
 
     /**
      * Gets an array of the human representations indexed by possible values.
-     *
-     * @return array
      */
-    public static function getReadables();
+    public static function getReadables(): array;
 
     /**
      * Tells is this value is acceptable.
      *
-     * @param mixed $value
-     *
-     * @return boolean True if $value is acceptable for this enumeration type; otherwise false
+     * @return bool True if $value is acceptable for this enumeration type; otherwise false
      */
-    public static function isAcceptableValue($value);
+    public static function isAcceptableValue($value): bool;
 
     /**
      * Gets the human representation for a given value.
@@ -55,21 +49,17 @@ interface EnumInterface
      *
      * @throws InvalidEnumArgumentException When $value is not acceptable for this enumeration type
      */
-    public static function getReadableFor($value);
+    public static function getReadableFor($value): string;
 
     /**
      * Gets the raw value.
-     *
-     * @return mixed
      */
     public function getValue();
 
     /**
      * Gets the human representation of the value.
-     *
-     * @return string
      */
-    public function getReadable();
+    public function getReadable(): string;
 
     /**
      * Determines whether enums are equals.
@@ -78,5 +68,5 @@ interface EnumInterface
      *
      * @return bool True if $enum is an enum with the same type and value as this instance; otherwise, false
      */
-    public function equals(EnumInterface $enum);
+    public function equals(EnumInterface $enum): bool;
 }
